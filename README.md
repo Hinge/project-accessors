@@ -9,7 +9,7 @@ But, most of the time included builds are only used with a single parent project
 to access the projects in a type safe way.
 
 ## Setup
-Firstly, you need to add the plugin to your include build's build script:
+Firstly, you need to add the plugin to your included build's build script (for example `build-logic/build.gradle.kts`):
 ```kotlin
 plugin {
     id("co.hinge.gradle.project-accessors") version "1.0.0"
