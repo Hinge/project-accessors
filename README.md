@@ -14,6 +14,11 @@ Firstly, you need to add the plugin to your included build's build script (for e
 plugin {
     id("co.hinge.gradle.project-accessors") version "1.1.0"
 }
+
+// If you also want to use the utilities you can add this:
+dependencies {
+    id("co.hinge.gradle.project-accessors:project-accessors:1.1.0")
+}
 ```
 
 For most projects, that's all that's needed. You can then access the projects using the generated accessors:
@@ -56,6 +61,22 @@ projectAccessors {
         projectPaths.addAll(":path:to:module")
         accessorName.set("otherProjects")
     }
+}
+```
+
+## Utilities
+### Copying Project Dependencies
+Sometimes you need to depend on a specific configuration of a project. This is
+annoying to do with Kotlin build scripts as you have to copy the dependency then
+change the configuration. 
+
+To make this easier, the plugin provides a utility function that allows you to quickly
+copy a dependency and change the configuration:
+```kotlin
+import co.hinge.gradle.projectaccessors.copy
+
+dependencies {
+    implementation(projects.someModule.copy(targetConfiguration = "someConfiguration"))
 }
 ```
 
