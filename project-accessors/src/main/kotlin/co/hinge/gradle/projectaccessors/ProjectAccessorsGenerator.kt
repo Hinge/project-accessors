@@ -8,9 +8,11 @@ import com.squareup.kotlinpoet.KModifier
 import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.STRING
 import com.squareup.kotlinpoet.TypeSpec
+import org.gradle.internal.impldep.org.bouncycastle.asn1.x500.style.RFC4519Style.name
 import java.util.Locale
 
 internal class ProjectAccessorsGenerator(
+    private val projectName: String,
     private val packageName: String,
     private val accessorName: String,
     private val className: String,
@@ -57,6 +59,7 @@ internal class ProjectAccessorsGenerator(
         return FileSpec.builder(projectDependenciesType)
             .addProperty(
                 PropertySpec.builder(accessorName, projectDependenciesType, KModifier.INTERNAL)
+                    .addKdoc("Returns the project dependencies for the %L project.", projectName)
                     .receiver(projectType)
                     .getter(
                         FunSpec.getterBuilder()
@@ -69,10 +72,12 @@ internal class ProjectAccessorsGenerator(
             .build()
     }
 
-
+    /**
+     */
     private fun Module.renderTo(parent: TypeSpec.Builder) {
         parent.addProperty(
             PropertySpec.builder(accessorName, typeName)
+                .addKdoc("Creates a project dependency on the project at path \"%L\"", path.joinToString(":", prefix = ":"))
                 .getter(
                     FunSpec.getterBuilder()
                         .addStatement("return %T()", typeName)
@@ -88,9 +93,16 @@ internal class ProjectAccessorsGenerator(
                     if (isProject) {
                         addSuperinterface(projectDependencyType, projectDependency())
                     }
+                    val path = path.joinToString(":", prefix = ":")
                     addProperty(
                         PropertySpec.builder("path", STRING)
-                            .initializer("%S", path.joinToString(":", prefix = ":"))
+                            .addKdoc("Returns the path to the project as a string.")
+                            .apply {
+                                if (!isProject) {
+                                    addKdoc("\n\nPlease note that %S is not declared project so this path cannot be used as a dependency, this accessor is here for convenience.", path)
+                                }
+                            }
+                            .initializer("%S", path)
                             .build()
                     )
                     for (child in children.values) {

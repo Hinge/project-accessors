@@ -16,6 +16,9 @@ abstract class GenerateProjectAccessorsTask : DefaultTask() {
     abstract val projectPaths: SetProperty<String>
 
     @get:Input
+    abstract val projectName: Property<String>
+
+    @get:Input
     abstract val packageName: Property<String>
 
     @get:Input
@@ -43,9 +46,10 @@ abstract class GenerateProjectAccessorsTask : DefaultTask() {
             mkdirs()
         }
         val generator = ProjectAccessorsGenerator(
-            packageName.get(),
-            accessorName.get(),
-            className.get(),
+            projectName = projectName.get(),
+            packageName = packageName.get(),
+            accessorName = accessorName.get(),
+            className = className.get(),
         )
 
         generator.generate(projectPaths.get())
