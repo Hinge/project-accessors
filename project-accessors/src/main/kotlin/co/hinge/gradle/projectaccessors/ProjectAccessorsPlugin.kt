@@ -29,6 +29,7 @@ class ProjectAccessorsPlugin : Plugin<Project> {
         ) {
             it.description = "Generates the $name project accessors"
 
+            it.projectName.set(extension.name)
             it.projectPaths.set(extension.projectPaths)
             it.packageName.set(extension.packageName)
             it.accessorName.set(extension.accessorName)
