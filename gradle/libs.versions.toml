@@ -1,5 +1,5 @@
 [versions]
-assertk = "0.28.0"
+assertk = "0.28.1"
 kotlin = "1.9.23"
 kotlinpoet = "1.16.0"
 kotlinCompileTesting = "0.4.1"
