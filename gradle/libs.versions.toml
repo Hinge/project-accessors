@@ -4,7 +4,7 @@ kotlin = "2.0.0"
 kotlinpoet = "1.17.0"
 kotlinCompileTesting = "0.4.1"
 gradlePublish = "1.2.1"
-junit5 = "5.10.2"
+junit5 = "5.10.3"
 
 [plugins]
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
