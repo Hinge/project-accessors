@@ -235,6 +235,7 @@ class ProjectAccessorsGeneratorFunctionalTest {
                 "8.7",
                 "8.8",
                 "8.9",
+								"8.10",
             ).map { Arguments.of(it) }.stream()
         }
     }
