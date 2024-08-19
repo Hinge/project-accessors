@@ -135,11 +135,13 @@ class ProjectAccessorsGeneratorFunctionalTest {
             }
             """
         )
-        projectDir.resolve("dependency/src/main/kotlin/Dependency.kt").writeKotlin("""
+        projectDir.resolve("dependency/src/main/kotlin/Dependency.kt").writeKotlin(
+            """
             package com.example.dependency
 
             abstract class Dependency
-        """.trimIndent())
+        """.trimIndent()
+        )
 
         projectDir.resolve("dependant/build.gradle.kts").writeKotlin(
             """
@@ -149,13 +151,15 @@ class ProjectAccessorsGeneratorFunctionalTest {
             }
             """
         )
-        projectDir.resolve("dependant/src/main/kotlin/Dependant.kt").writeKotlin("""
+        projectDir.resolve("dependant/src/main/kotlin/Dependant.kt").writeKotlin(
+            """
             package com.example.dependant
 
             import com.example.dependency.Dependency
 
             object Dependant : Dependency()
-        """.trimIndent())
+        """.trimIndent()
+        )
     }
 
     @Execution(ExecutionMode.CONCURRENT)
@@ -194,7 +198,8 @@ class ProjectAccessorsGeneratorFunctionalTest {
     @ParameterizedTest
     @MethodSource("provideGradleVersions")
     fun doesNotAllowDuplicateAccessorNames(gradleVersion: String) {
-        projectDir.resolve("gradle-plugin/build.gradle.kts").appendText("""
+        projectDir.resolve("gradle-plugin/build.gradle.kts").appendText(
+            """
             projectAccessors {
                 project("projects1") {
                     settingsFile.fileValue(file("../settings.gradle.kts"))
@@ -205,7 +210,8 @@ class ProjectAccessorsGeneratorFunctionalTest {
                     accessorName.set("projects")
                 }
             }
-        """.trimIndent())
+        """.trimIndent()
+        )
 
         assertFailure {
             gradleRunner(gradleVersion)
@@ -235,7 +241,7 @@ class ProjectAccessorsGeneratorFunctionalTest {
                 "8.7",
                 "8.8",
                 "8.9",
-								"8.10",
+                "8.10",
             ).map { Arguments.of(it) }.stream()
         }
     }

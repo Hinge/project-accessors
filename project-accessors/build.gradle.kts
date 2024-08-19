@@ -1,4 +1,5 @@
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
 
 plugins {
     alias(libs.plugins.kotlin.jvm)
@@ -22,6 +23,11 @@ tasks.withType<Test> {
 
 kotlin {
     jvmToolchain(21)
+    compilerOptions {
+        jvmTarget.set(JvmTarget.JVM_11)
+        languageVersion.set(KotlinVersion.KOTLIN_1_9)
+        apiVersion.set(languageVersion)
+    }
 }
 
 java {
@@ -90,12 +96,6 @@ pluginManager.withPlugin("org.gradle.signing") {
         val signingKey: String? by project
         val signingPassword: String? by project
         useInMemoryPgpKeys(signingKeyId, signingKey, signingPassword)
-    }
-}
-
-kotlin {
-    compilerOptions {
-        jvmTarget.set(JvmTarget.JVM_11)
     }
 }
 
