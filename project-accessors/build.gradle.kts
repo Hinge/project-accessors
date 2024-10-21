@@ -79,7 +79,10 @@ gradlePlugin {
     }
     vcsUrl.set("https://github.com/Hinge/project-accessors")
     website.set("https://github.com/Hinge/project-accessors")
+}
 
+tasks.validatePlugins {
+    enableStricterValidation = true
 }
 
 tasks.publishPlugins {
