@@ -41,8 +41,7 @@ class ProjectAccessorsGeneratorTest {
               public val root: RootProject
                 get() = RootProject()
             
-              public inner class RootProject : ProjectDependencyInternal by
-                  project.dependencies.project(mapOf("path" to ":")) as ProjectDependencyInternal
+              public inner class RootProject : ProjectDependencyInternal by project.dependencies.project(mapOf("path" to ":")) as ProjectDependencyInternal
             }
             """
         )
@@ -90,16 +89,14 @@ class ProjectAccessorsGeneratorTest {
               public val module1: Module1Project
                 get() = Module1Project()
             
-              public inner class RootProject : ProjectDependencyInternal by
-                  project.dependencies.project(mapOf("path" to ":")) as ProjectDependencyInternal {
+              public inner class RootProject : ProjectDependencyInternal by project.dependencies.project(mapOf("path" to ":")) as ProjectDependencyInternal {
                 /**
                  * Returns the path to the project as a string.
                  */
                 public val path: String = ":"
               }
             
-              public inner class Module1Project : ProjectDependencyInternal by
-                  project.dependencies.project(mapOf("path" to ":module1")) as ProjectDependencyInternal {
+              public inner class Module1Project : ProjectDependencyInternal by project.dependencies.project(mapOf("path" to ":module1")) as ProjectDependencyInternal {
                 /**
                  * Returns the path to the project as a string.
                  */
@@ -157,14 +154,11 @@ class ProjectAccessorsGeneratorTest {
               public val module2: Module2Project
                 get() = Module2Project()
             
-              public inner class RootProject : ProjectDependencyInternal by
-                  project.dependencies.project(mapOf("path" to ":")) as ProjectDependencyInternal
+              public inner class RootProject : ProjectDependencyInternal by project.dependencies.project(mapOf("path" to ":")) as ProjectDependencyInternal
             
-              public inner class Module1Project : ProjectDependencyInternal by
-                  project.dependencies.project(mapOf("path" to ":module1")) as ProjectDependencyInternal
+              public inner class Module1Project : ProjectDependencyInternal by project.dependencies.project(mapOf("path" to ":module1")) as ProjectDependencyInternal
             
-              public inner class Module2Project : ProjectDependencyInternal by
-                  project.dependencies.project(mapOf("path" to ":module2")) as ProjectDependencyInternal {
+              public inner class Module2Project : ProjectDependencyInternal by project.dependencies.project(mapOf("path" to ":module2")) as ProjectDependencyInternal {
                 /**
                  * Creates a project dependency on the project at path ":module2:submodule1"
                  */
@@ -183,22 +177,16 @@ class ProjectAccessorsGeneratorTest {
                 public val submodule3: Submodule3Project
                   get() = Submodule3Project()
             
-                public inner class Submodule1Project : ProjectDependencyInternal by
-                    project.dependencies.project(mapOf("path" to ":module2:submodule1")) as
-                    ProjectDependencyInternal
+                public inner class Submodule1Project : ProjectDependencyInternal by project.dependencies.project(mapOf("path" to ":module2:submodule1")) as ProjectDependencyInternal
             
-                public inner class Submodule2Project : ProjectDependencyInternal by
-                    project.dependencies.project(mapOf("path" to ":module2:submodule2")) as
-                    ProjectDependencyInternal {
+                public inner class Submodule2Project : ProjectDependencyInternal by project.dependencies.project(mapOf("path" to ":module2:submodule2")) as ProjectDependencyInternal {
                   /**
                    * Creates a project dependency on the project at path ":module2:submodule2:subsubmodule1"
                    */
                   public val subsubmodule1: Subsubmodule1Project
                     get() = Subsubmodule1Project()
             
-                  public inner class Subsubmodule1Project : ProjectDependencyInternal by
-                      project.dependencies.project(mapOf("path" to ":module2:submodule2:subsubmodule1")) as
-                      ProjectDependencyInternal
+                  public inner class Subsubmodule1Project : ProjectDependencyInternal by project.dependencies.project(mapOf("path" to ":module2:submodule2:subsubmodule1")) as ProjectDependencyInternal
                 }
             
                 public inner class Submodule3Project {
@@ -216,9 +204,7 @@ class ProjectAccessorsGeneratorTest {
                   public val subsubmodule1: Subsubmodule1Project
                     get() = Subsubmodule1Project()
             
-                  public inner class Subsubmodule1Project : ProjectDependencyInternal by
-                      project.dependencies.project(mapOf("path" to ":module2:submodule3:subsubmodule1")) as
-                      ProjectDependencyInternal
+                  public inner class Subsubmodule1Project : ProjectDependencyInternal by project.dependencies.project(mapOf("path" to ":module2:submodule3:subsubmodule1")) as ProjectDependencyInternal
                 }
               }
             }
@@ -257,11 +243,9 @@ class ProjectAccessorsGeneratorTest {
               public val someModule: SomeModuleProject
                 get() = SomeModuleProject()
             
-              public inner class RootProject : ProjectDependencyInternal by
-                  project.dependencies.project(mapOf("path" to ":")) as ProjectDependencyInternal
+              public inner class RootProject : ProjectDependencyInternal by project.dependencies.project(mapOf("path" to ":")) as ProjectDependencyInternal
             
-              public inner class SomeModuleProject : ProjectDependencyInternal by
-                  project.dependencies.project(mapOf("path" to ":some-module")) as ProjectDependencyInternal
+              public inner class SomeModuleProject : ProjectDependencyInternal by project.dependencies.project(mapOf("path" to ":some-module")) as ProjectDependencyInternal
             }
             """
         )
@@ -298,11 +282,9 @@ class ProjectAccessorsGeneratorTest {
               public val someModule: SomeModuleProject
                 get() = SomeModuleProject()
             
-              public inner class RootProject : ProjectDependencyInternal by
-                  project.dependencies.project(mapOf("path" to ":")) as ProjectDependencyInternal
+              public inner class RootProject : ProjectDependencyInternal by project.dependencies.project(mapOf("path" to ":")) as ProjectDependencyInternal
             
-              public inner class SomeModuleProject : ProjectDependencyInternal by
-                  project.dependencies.project(mapOf("path" to ":some_module")) as ProjectDependencyInternal
+              public inner class SomeModuleProject : ProjectDependencyInternal by project.dependencies.project(mapOf("path" to ":some_module")) as ProjectDependencyInternal
             }
             """
         )
@@ -339,12 +321,9 @@ class ProjectAccessorsGeneratorTest {
               public val projectAccessors: ProjectAccessorsProject
                 get() = ProjectAccessorsProject()
             
-              public inner class RootProject : ProjectDependencyInternal by
-                  project.dependencies.project(mapOf("path" to ":")) as ProjectDependencyInternal
+              public inner class RootProject : ProjectDependencyInternal by project.dependencies.project(mapOf("path" to ":")) as ProjectDependencyInternal
             
-              public inner class ProjectAccessorsProject : ProjectDependencyInternal by
-                  project.dependencies.project(mapOf("path" to ":project-accessors")) as
-                  ProjectDependencyInternal
+              public inner class ProjectAccessorsProject : ProjectDependencyInternal by project.dependencies.project(mapOf("path" to ":project-accessors")) as ProjectDependencyInternal
             }
             """
         )
