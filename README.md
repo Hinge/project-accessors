@@ -12,12 +12,12 @@ to access the projects in a type safe way.
 Firstly, you need to add the plugin to your included build's build script (for example `build-logic/build.gradle.kts`):
 ```kotlin
 plugin {
-    id("co.hinge.gradle.project-accessors") version "1.1.0"
+    id("co.hinge.gradle.project-accessors") version "1.2.0"
 }
 
 // If you also want to use the utilities you can add this:
 dependencies {
-    id("co.hinge.gradle.project-accessors:project-accessors:1.1.0")
+    id("co.hinge.gradle.project-accessors:project-accessors:1.2.0")
 }
 ```
 
@@ -81,7 +81,7 @@ dependencies {
 ```
 
 ## Supported Gradle Versions
-The plugin is tested with all minor Gradle versions from 7.6 up to 8.7, but may work with other versions.
+The plugin is tested with all major Gradle versions from 7.6 up to 8.11, but will likely work with other versions too.
 
 ## License
 ```plain
