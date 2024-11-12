@@ -76,3 +76,6 @@ Icon\r
 
 # Crash dumps
 **/hs_err_pid*.log
+
+# Kotlin compiler
+.kotlin

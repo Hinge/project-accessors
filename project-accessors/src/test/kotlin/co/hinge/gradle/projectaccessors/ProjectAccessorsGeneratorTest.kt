@@ -4,11 +4,12 @@ import assertk.assertThat
 import assertk.assertions.isEqualTo
 import com.tschuchort.compiletesting.KotlinCompilation
 import com.tschuchort.compiletesting.SourceFile
+import org.gradle.util.GradleVersion
 import org.jetbrains.kotlin.compiler.plugin.ExperimentalCompilerApi
 import org.junit.jupiter.api.Test
 
 class ProjectAccessorsGeneratorTest {
-    private val generator = ProjectAccessorsGenerator(
+    private var generator = ProjectAccessorsGenerator(
         projectName = "parent",
         packageName = "com.example",
         accessorName = "projects",
@@ -19,6 +20,48 @@ class ProjectAccessorsGeneratorTest {
     fun `generate empty accessor`() {
         test(
             setOf(":"),
+            """
+            package com.example
+
+            import org.gradle.api.Project
+            import org.gradle.api.`internal`.artifacts.dependencies.ProjectDependencyInternal
+            
+            /**
+             * Returns the project dependencies for the parent project.
+             */
+            internal val Project.projects: ProjectsAccessors
+              get() = ProjectsAccessors(this)
+            
+            internal class ProjectsAccessors(
+              private val project: Project,
+            ) {
+              /**
+               * Creates a project dependency on the project at path ":"
+               */
+              public val root: RootProject
+                get() = RootProject()
+            
+              public inner class RootProject : ProjectDependencyInternal by
+                  project.dependencies.project(mapOf("path" to ":")) as ProjectDependencyInternal
+            }
+            """
+        )
+    }
+
+    @Test
+    fun `with project path`() {
+        generator = ProjectAccessorsGenerator(
+            projectName = "parent",
+            packageName = "com.example",
+            accessorName = "projects",
+            className = "ProjectsAccessors",
+            gradleVersion = GradleVersion.version("8.10.2")
+        )
+        test(
+            setOf(
+                ":",
+                ":module1",
+            ),
             """
             package com.example
 
@@ -41,6 +84,12 @@ class ProjectAccessorsGeneratorTest {
               public val root: RootProject
                 get() = RootProject()
             
+              /**
+               * Creates a project dependency on the project at path ":module1"
+               */
+              public val module1: Module1Project
+                get() = Module1Project()
+            
               public inner class RootProject : ProjectDependencyInternal by
                   project.dependencies.project(mapOf("path" to ":")) as ProjectDependencyInternal {
                 /**
@@ -48,8 +97,17 @@ class ProjectAccessorsGeneratorTest {
                  */
                 public val path: String = ":"
               }
+            
+              public inner class Module1Project : ProjectDependencyInternal by
+                  project.dependencies.project(mapOf("path" to ":module1")) as ProjectDependencyInternal {
+                /**
+                 * Returns the path to the project as a string.
+                 */
+                public val path: String = ":module1"
+              }
             }
-            """
+            """,
+            compile = false
         )
     }
 
@@ -100,28 +158,13 @@ class ProjectAccessorsGeneratorTest {
                 get() = Module2Project()
             
               public inner class RootProject : ProjectDependencyInternal by
-                  project.dependencies.project(mapOf("path" to ":")) as ProjectDependencyInternal {
-                /**
-                 * Returns the path to the project as a string.
-                 */
-                public val path: String = ":"
-              }
+                  project.dependencies.project(mapOf("path" to ":")) as ProjectDependencyInternal
             
               public inner class Module1Project : ProjectDependencyInternal by
-                  project.dependencies.project(mapOf("path" to ":module1")) as ProjectDependencyInternal {
-                /**
-                 * Returns the path to the project as a string.
-                 */
-                public val path: String = ":module1"
-              }
+                  project.dependencies.project(mapOf("path" to ":module1")) as ProjectDependencyInternal
             
               public inner class Module2Project : ProjectDependencyInternal by
                   project.dependencies.project(mapOf("path" to ":module2")) as ProjectDependencyInternal {
-                /**
-                 * Returns the path to the project as a string.
-                 */
-                public val path: String = ":module2"
-            
                 /**
                  * Creates a project dependency on the project at path ":module2:submodule1"
                  */
@@ -142,21 +185,11 @@ class ProjectAccessorsGeneratorTest {
             
                 public inner class Submodule1Project : ProjectDependencyInternal by
                     project.dependencies.project(mapOf("path" to ":module2:submodule1")) as
-                    ProjectDependencyInternal {
-                  /**
-                   * Returns the path to the project as a string.
-                   */
-                  public val path: String = ":module2:submodule1"
-                }
+                    ProjectDependencyInternal
             
                 public inner class Submodule2Project : ProjectDependencyInternal by
                     project.dependencies.project(mapOf("path" to ":module2:submodule2")) as
                     ProjectDependencyInternal {
-                  /**
-                   * Returns the path to the project as a string.
-                   */
-                  public val path: String = ":module2:submodule2"
-            
                   /**
                    * Creates a project dependency on the project at path ":module2:submodule2:subsubmodule1"
                    */
@@ -165,12 +198,7 @@ class ProjectAccessorsGeneratorTest {
             
                   public inner class Subsubmodule1Project : ProjectDependencyInternal by
                       project.dependencies.project(mapOf("path" to ":module2:submodule2:subsubmodule1")) as
-                      ProjectDependencyInternal {
-                    /**
-                     * Returns the path to the project as a string.
-                     */
-                    public val path: String = ":module2:submodule2:subsubmodule1"
-                  }
+                      ProjectDependencyInternal
                 }
             
                 public inner class Submodule3Project {
@@ -190,12 +218,7 @@ class ProjectAccessorsGeneratorTest {
             
                   public inner class Subsubmodule1Project : ProjectDependencyInternal by
                       project.dependencies.project(mapOf("path" to ":module2:submodule3:subsubmodule1")) as
-                      ProjectDependencyInternal {
-                    /**
-                     * Returns the path to the project as a string.
-                     */
-                    public val path: String = ":module2:submodule3:subsubmodule1"
-                  }
+                      ProjectDependencyInternal
                 }
               }
             }
@@ -210,7 +233,6 @@ class ProjectAccessorsGeneratorTest {
             """
             package com.example
 
-            import kotlin.String
             import org.gradle.api.Project
             import org.gradle.api.`internal`.artifacts.dependencies.ProjectDependencyInternal
             
@@ -236,20 +258,10 @@ class ProjectAccessorsGeneratorTest {
                 get() = SomeModuleProject()
             
               public inner class RootProject : ProjectDependencyInternal by
-                  project.dependencies.project(mapOf("path" to ":")) as ProjectDependencyInternal {
-                /**
-                 * Returns the path to the project as a string.
-                 */
-                public val path: String = ":"
-              }
+                  project.dependencies.project(mapOf("path" to ":")) as ProjectDependencyInternal
             
               public inner class SomeModuleProject : ProjectDependencyInternal by
-                  project.dependencies.project(mapOf("path" to ":some-module")) as ProjectDependencyInternal {
-                /**
-                 * Returns the path to the project as a string.
-                 */
-                public val path: String = ":some-module"
-              }
+                  project.dependencies.project(mapOf("path" to ":some-module")) as ProjectDependencyInternal
             }
             """
         )
@@ -262,7 +274,6 @@ class ProjectAccessorsGeneratorTest {
             """
             package com.example
 
-            import kotlin.String
             import org.gradle.api.Project
             import org.gradle.api.`internal`.artifacts.dependencies.ProjectDependencyInternal
             
@@ -288,20 +299,10 @@ class ProjectAccessorsGeneratorTest {
                 get() = SomeModuleProject()
             
               public inner class RootProject : ProjectDependencyInternal by
-                  project.dependencies.project(mapOf("path" to ":")) as ProjectDependencyInternal {
-                /**
-                 * Returns the path to the project as a string.
-                 */
-                public val path: String = ":"
-              }
+                  project.dependencies.project(mapOf("path" to ":")) as ProjectDependencyInternal
             
               public inner class SomeModuleProject : ProjectDependencyInternal by
-                  project.dependencies.project(mapOf("path" to ":some_module")) as ProjectDependencyInternal {
-                /**
-                 * Returns the path to the project as a string.
-                 */
-                public val path: String = ":some_module"
-              }
+                  project.dependencies.project(mapOf("path" to ":some_module")) as ProjectDependencyInternal
             }
             """
         )
@@ -314,7 +315,6 @@ class ProjectAccessorsGeneratorTest {
             """
             package com.example
 
-            import kotlin.String
             import org.gradle.api.Project
             import org.gradle.api.`internal`.artifacts.dependencies.ProjectDependencyInternal
             
@@ -340,30 +340,25 @@ class ProjectAccessorsGeneratorTest {
                 get() = ProjectAccessorsProject()
             
               public inner class RootProject : ProjectDependencyInternal by
-                  project.dependencies.project(mapOf("path" to ":")) as ProjectDependencyInternal {
-                /**
-                 * Returns the path to the project as a string.
-                 */
-                public val path: String = ":"
-              }
+                  project.dependencies.project(mapOf("path" to ":")) as ProjectDependencyInternal
             
               public inner class ProjectAccessorsProject : ProjectDependencyInternal by
                   project.dependencies.project(mapOf("path" to ":project-accessors")) as
-                  ProjectDependencyInternal {
-                /**
-                 * Returns the path to the project as a string.
-                 */
-                public val path: String = ":project-accessors"
-              }
+                  ProjectDependencyInternal
             }
             """
         )
     }
 
     @OptIn(ExperimentalCompilerApi::class)
-    private fun test(projectPaths: Set<String>, expected: String) {
+    private fun test(
+        projectPaths: Set<String>,
+        expected: String,
+        compile: Boolean = true
+    ) {
         val output = generator.generate(projectPaths).toString().trim()
         assertThat(output).isEqualTo(expected.trimIndent())
+        if (!compile) return
         val result = KotlinCompilation().run {
             sources = listOf(SourceFile.kotlin("ProjectsAccessors.kt", expected))
             inheritClassPath = true
