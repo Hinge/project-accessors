@@ -101,7 +101,7 @@ internal class ProjectAccessorsGenerator(
                                 .addKdoc("Returns the path to the project as a string.")
                                 .apply {
                                     if (!isProject) {
-                                        addKdoc("\n\nPlease note that %S is not declared project so this path cannot be used as a dependency, this accessor is here for convenience.", path)
+                                        addKdoc("\n\nPlease note that %S is not declared project so this path cannot be used\nas a dependency, this accessor is here for convenience.", path)
                                     }
                                 }
                                 .initializer("%S", path)
