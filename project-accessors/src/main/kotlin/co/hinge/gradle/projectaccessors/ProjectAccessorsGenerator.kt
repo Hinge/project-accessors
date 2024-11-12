@@ -8,7 +8,7 @@ import com.squareup.kotlinpoet.KModifier
 import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.STRING
 import com.squareup.kotlinpoet.TypeSpec
-import org.gradle.internal.impldep.org.bouncycastle.asn1.x500.style.RFC4519Style.name
+import org.gradle.util.GradleVersion
 import java.util.Locale
 
 internal class ProjectAccessorsGenerator(
@@ -16,6 +16,7 @@ internal class ProjectAccessorsGenerator(
     private val packageName: String,
     private val accessorName: String,
     private val className: String,
+    private val gradleVersion: GradleVersion = GradleVersion.current(),
 ) {
 
     fun generate(projectPaths: Set<String>): FileSpec {
@@ -94,17 +95,19 @@ internal class ProjectAccessorsGenerator(
                         addSuperinterface(projectDependencyType, projectDependency())
                     }
                     val path = path.joinToString(":", prefix = ":")
-                    addProperty(
-                        PropertySpec.builder("path", STRING)
-                            .addKdoc("Returns the path to the project as a string.")
-                            .apply {
-                                if (!isProject) {
-                                    addKdoc("\n\nPlease note that %S is not declared project so this path cannot be used as a dependency, this accessor is here for convenience.", path)
+                    if (!isProject || gradleVersion < maxGradleVersionForProjectPath) {
+                        addProperty(
+                            PropertySpec.builder("path", STRING)
+                                .addKdoc("Returns the path to the project as a string.")
+                                .apply {
+                                    if (!isProject) {
+                                        addKdoc("\n\nPlease note that %S is not declared project so this path cannot be used as a dependency, this accessor is here for convenience.", path)
+                                    }
                                 }
-                            }
-                            .initializer("%S", path)
-                            .build()
-                    )
+                                .initializer("%S", path)
+                                .build()
+                        )
+                    }
                     for (child in children.values) {
                         child.renderTo(this)
                     }
@@ -129,6 +132,8 @@ internal class ProjectAccessorsGenerator(
         private val projectDependencyConstructor = FunSpec.constructorBuilder()
             .addParameter("project", projectType)
             .build()
+
+        private val maxGradleVersionForProjectPath = GradleVersion.version("8.11")
     }
 
     data class Module(

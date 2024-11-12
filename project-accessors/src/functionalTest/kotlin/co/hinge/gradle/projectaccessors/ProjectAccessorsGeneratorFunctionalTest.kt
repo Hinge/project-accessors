@@ -230,18 +230,19 @@ class ProjectAccessorsGeneratorFunctionalTest {
         private fun provideGradleVersions(): Stream<Arguments> {
             return setOf(
                 System.getProperty("currentGradleVersion"),
-                "7.6.4",
-                "8.0.2",
-                "8.1.1",
-                "8.2.1",
-                "8.3",
-                "8.4",
-                "8.5",
-                "8.6",
-                "8.7",
-                "8.8",
+                "8.11",
+                "8.10.2",
                 "8.9",
-                "8.10",
+                "8.8",
+                "8.7",
+                "8.6",
+                "8.5",
+                "8.4",
+                "8.3",
+                "8.2.1",
+                "8.1.1",
+                "8.0.2",
+                "7.6.4",
             ).map { Arguments.of(it) }.stream()
         }
     }
