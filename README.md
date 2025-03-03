@@ -81,7 +81,7 @@ dependencies {
 ```
 
 ## Supported Gradle Versions
-The plugin is tested with all major Gradle versions from 7.6 up to 8.11, but will likely work with other versions too.
+The plugin is tested with all major Gradle versions from 8.2, but will likely work with other versions too.
 
 ## License
 ```plain
