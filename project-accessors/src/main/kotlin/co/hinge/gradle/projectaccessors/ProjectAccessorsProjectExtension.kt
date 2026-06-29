@@ -16,7 +16,7 @@ abstract class ProjectAccessorsProjectExtension(private val name: String) : Name
     /**
      * The package name to generate the accessors in.
      *
-     * Defaults an empty string.
+     * Defaults to an empty string.
      */
     abstract val packageName: Property<String>
 
