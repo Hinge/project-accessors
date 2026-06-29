@@ -62,7 +62,7 @@ class ProjectAccessorsPlugin : Plugin<Project> {
         projects.forEach {
             val accessorName = it.packageName.get() + "." + it.accessorName.get()
             if (!accessors.add(accessorName)) {
-                throw IllegalArgumentException("There are multiple projects accessors with the accessor name $accessorName. When adding multiple accessors, make sure to set explicit and unique accessor names.")
+                throw IllegalArgumentException("There are multiple projects' accessors with the accessor name $accessorName. When adding multiple accessors, make sure to set explicit and unique accessor names.")
             }
         }
     }
